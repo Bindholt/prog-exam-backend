@@ -43,6 +43,6 @@ public class AthleteController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAthlete(@PathVariable Long id) {
         athleteService.deleteAthlete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.ok().build();
     }
 }

@@ -29,6 +29,6 @@ public class ResultController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteResult(@PathVariable Long id) {
         resultService.deleteResult(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.ok().build();
     }
 }
