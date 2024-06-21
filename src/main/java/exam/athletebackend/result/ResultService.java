@@ -56,7 +56,6 @@ public class ResultService {
         return result;
     }
 
-    @Transactional
     public ResultResponseDTO addResult(ResultRequestDTO resultRequestDTO) {
         Result result = fromDTO(resultRequestDTO);
 
