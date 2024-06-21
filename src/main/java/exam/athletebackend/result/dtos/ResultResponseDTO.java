@@ -1,4 +1,6 @@
-package exam.athletebackend.result;
+package exam.athletebackend.result.dtos;
+
+import exam.athletebackend.result.ResultType;
 
 import java.time.LocalDate;
 

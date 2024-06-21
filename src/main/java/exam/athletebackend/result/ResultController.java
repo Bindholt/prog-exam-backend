@@ -1,5 +1,7 @@
 package exam.athletebackend.result;
 
+import exam.athletebackend.result.dtos.ResultRequestDTO;
+import exam.athletebackend.result.dtos.ResultResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

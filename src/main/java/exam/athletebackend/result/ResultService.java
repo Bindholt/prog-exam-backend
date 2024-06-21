@@ -4,13 +4,13 @@ import exam.athletebackend.athlete.Athlete;
 import exam.athletebackend.athlete.AthleteRepository;
 import exam.athletebackend.discipline.Discipline;
 import exam.athletebackend.discipline.DisciplineRepository;
-import jakarta.transaction.Transactional;
+import exam.athletebackend.result.dtos.ResultRequestDTO;
+import exam.athletebackend.result.dtos.ResultResponseDTO;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 

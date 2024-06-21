@@ -1,8 +1,7 @@
 package exam.athletebackend.discipline;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import exam.athletebackend.discipline.dtos.DisciplineResponseDTO;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,8 +15,18 @@ public class DisciplineController {
     }
 
     @GetMapping
-    public List<DisciplineDTO> getDisciplines() {
+    public List<DisciplineResponseDTO> getDisciplines() {
         return disciplineService.getDisciplines();
+    }
+
+    @PostMapping
+    public DisciplineResponseDTO addDiscipline(@RequestBody DisciplineResponseDTO disciplineResponseDTO) {
+        return disciplineService.addDiscipline(disciplineResponseDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteDiscipline(@PathVariable Long id) {
+        disciplineService.deleteDiscipline(id);
     }
 
 }

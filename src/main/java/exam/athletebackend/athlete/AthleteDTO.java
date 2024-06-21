@@ -1,7 +1,6 @@
 package exam.athletebackend.athlete;
 
-import exam.athletebackend.result.Result;
-import exam.athletebackend.result.ResultResponseDTO;
+import exam.athletebackend.result.dtos.ResultResponseDTO;
 
 import java.time.LocalDate;
 import java.util.List;

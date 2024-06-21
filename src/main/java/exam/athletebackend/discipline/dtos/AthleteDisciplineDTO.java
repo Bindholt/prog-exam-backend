@@ -1,4 +1,4 @@
-package exam.athletebackend.discipline;
+package exam.athletebackend.discipline.dtos;
 
 import java.time.LocalDate;
 
