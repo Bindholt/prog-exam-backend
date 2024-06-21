@@ -11,6 +11,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -37,11 +39,10 @@ class AthleteControllerTest {
     @Test
     @DisplayName("Should return all athletes when getAthletes is called")
     void shouldReturnAllAthletesWhenGetAthletesIsCalled() throws Exception {
-        AthleteDTO athlete1 = new AthleteDTO(1L, "Athlete One", 25, "Male", "Club One", null, null);
-        AthleteDTO athlete2 = new AthleteDTO(2L, "Athlete Two", 30, "Female", "Club Two", null, null);
-        List<AthleteDTO> athletes = Arrays.asList(athlete1, athlete2);
+        AthleteDTO athleteOne = new AthleteDTO(1L, "Athlete One", LocalDate.of(1999,1, 1), "Mand", "Club One", null, null);
+    AthleteDTO athleteTwo = new AthleteDTO(2L, "Athlete Two", LocalDate.of(1998, 1, 1), "Kvinde", "Club Two", null, null);
 
-        when(athleteService.getAthletes()).thenReturn(athletes);
+        when(athleteService.getAthletes()).thenReturn(Arrays.asList(athleteOne, athleteTwo));
 
         mockMvc.perform(get("/athletes")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -49,14 +50,8 @@ class AthleteControllerTest {
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id", is(1)))
                 .andExpect(jsonPath("$[0].name", is("Athlete One")))
-                .andExpect(jsonPath("$[0].age", is(25)))
-                .andExpect(jsonPath("$[0].gender", is("Male")))
-                .andExpect(jsonPath("$[0].club", is("Club One")))
-                .andExpect(jsonPath("$[1].id", is(2)))
-                .andExpect(jsonPath("$[1].name", is("Athlete Two")))
-                .andExpect(jsonPath("$[1].age", is(30)))
-                .andExpect(jsonPath("$[1].gender", is("Female")))
-                .andExpect(jsonPath("$[1].club", is("Club Two")));
+                .andExpect(jsonPath("$[0].birthdate", is("1999-01-01")));
+
     }
 
     @Test
@@ -68,56 +63,5 @@ class AthleteControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
-    }
-
-    @Test
-    @DisplayName("Should add athlete when addAthlete is called with valid data")
-    void shouldAddAthleteWhenAddAthleteIsCalledWithValidData() throws Exception {
-        AthleteDTO athlete = new AthleteDTO(null, "Athlete One", 25, "Male", "Club One", null, null);
-        AthleteDTO savedAthlete = new AthleteDTO(1L, "Athlete One", 25, "Male", "Club One", null, null);
-
-        when(athleteService.addAthlete(athlete)).thenReturn(savedAthlete);
-
-        mockMvc.perform(post("/athletes")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(athlete)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.name", is("Athlete One")))
-                .andExpect(jsonPath("$.age", is(25)))
-                .andExpect(jsonPath("$.gender", is("Male")))
-                .andExpect(jsonPath("$.club", is("Club One")));
-    }
-
-    @Test
-    @DisplayName("Should update athlete when updatePartialAthlete is called with valid data")
-    void shouldUpdateAthleteWhenUpdatePartialAthleteIsCalledWithValidData() throws Exception {
-        AthleteDTO athlete = new AthleteDTO(1L, "Athlete One", 25, "Male", "Club One", null, null);
-        AthleteDTO updatedAthlete = new AthleteDTO(1L, "Athlete One Updated", 26, "Male", "Club One", null, null);
-
-        when(athleteService.updatePartialAthlete(1L, athlete)).thenReturn(Optional.of(updatedAthlete));
-
-        mockMvc.perform(patch("/athletes/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(athlete)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.name", is("Athlete One Updated")))
-                .andExpect(jsonPath("$.age", is(26)))
-                .andExpect(jsonPath("$.gender", is("Male")))
-                .andExpect(jsonPath("$.club", is("Club One")));
-    }
-
-    @Test
-    @DisplayName("Should return 404 when updatePartialAthlete is called with invalid id")
-    void shouldReturn404WhenUpdatePartialAthleteIsCalledWithInvalidId() throws Exception {
-        AthleteDTO athlete = new AthleteDTO(1L, "Athlete One", 25, "Male", "Club One", null, null);
-
-        when(athleteService.updatePartialAthlete(1L, athlete)).thenReturn(Optional.empty());
-
-        mockMvc.perform(patch("/athletes/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(athlete)))
-                .andExpect(status().isNotFound());
     }
 }

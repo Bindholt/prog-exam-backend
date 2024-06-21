@@ -34,8 +34,6 @@ public class InitData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        //deleteAllResults();
-        //deleteAllDisciplines();
         if(athleteRepository.count() == 0) {
             createAthletes();
         }
@@ -45,7 +43,6 @@ public class InitData implements CommandLineRunner {
         if(resultRepository.count() == 0) {
             createResults();
         }
-
     }
 
     private void createDisciplines() {
@@ -57,14 +54,16 @@ public class InitData implements CommandLineRunner {
         disciplineRepository.save(new Discipline("100-meter hurdles", TIME));
         disciplineRepository.save(new Discipline("Pole vault", DISTANCE));
         disciplineRepository.save(new Discipline("Swimming 200m freestyle", TIME));
-        disciplineRepository.save(new Discipline("Chess", POINTS));
         disciplineRepository.save(new Discipline("Gymnastics floor routine", POINTS));
     }
 
     private void createAthletes() {
         athleteRepository.save(new Athlete("Julie", LocalDate.of(1998, 8, 31), "Kvinde", "Musserne"));
-        athleteRepository.save(new Athlete("Mads", LocalDate.of(1992, 12, 12), "Mand", "Løb"));
-        athleteRepository.save(new Athlete("Lars", LocalDate.of(1988, 4, 2), "Mand", "Cykling"));
+        athleteRepository.save(new Athlete("Mads", LocalDate.of(1992, 12, 12), "Mand", "Løberne"));
+        athleteRepository.save(new Athlete("Lars", LocalDate.of(1988, 4, 2), "Mand", "Hold3"));
+        athleteRepository.save(new Athlete("Mette", LocalDate.of(1995, 6, 15), "Kvinde", "Hold4"));
+        athleteRepository.save(new Athlete("Sofie", LocalDate.of(1999, 2, 28), "Kvinde", "Hold4"));
+        athleteRepository.save(new Athlete("Mikkel", LocalDate.of(1990, 10, 10), "Mand", "Hold4"));
     }
 
     private void createResults() {
@@ -83,41 +82,53 @@ public class InitData implements CommandLineRunner {
                 disciplineRepository.save(discipline);
             }
         });
-    }
 
-    public void deleteAllResults() {
-        List<Result> results = resultRepository.findAll();
-        for (Result result : results) {
-            Athlete athlete = result.getAthlete();
-            athlete.removeResult(result);
-            athleteRepository.save(athlete);
-            Discipline discipline = result.getDiscipline();
-            discipline.removeResult(result);
-            disciplineRepository.save(discipline);
-        }
-        resultRepository.deleteAll();
-    }
+        Optional<Athlete> mads = athleteRepository.findByName("Mads");
+        mads.ifPresent(athlete -> {
+            Discipline discipline = disciplineRepository.findByName("High jump").orElse(null);
+            if (discipline != null) {
+                Result result = new Result(DISTANCE, LocalDate.now(), "1.23", athlete, discipline);
+                athlete.getResults().add(result);
+                athlete.getDisciplines().add(discipline);
+                discipline.getAthletes().add(athlete);
+                discipline.getResults().add(result);
 
-    public void deleteAllDisciplines() {
-        List<Discipline> disciplines = disciplineRepository.findAll();
-        for (Discipline discipline : disciplines) {
-            // Remove discipline from each athlete
-            List<Athlete> athletes = athleteRepository.findAllByDisciplinesContains(discipline);
-            for (Athlete athlete : athletes) {
-                athlete.removeDiscipline(discipline);
-                discipline.getAthletes().remove(athlete);
-                athleteRepository.save(athlete);
-            }
-
-            // Remove discipline from each result
-            List<Result> results = resultRepository.findAllByDiscipline(discipline);
-            for (Result result : results) {
-                result.setDiscipline(null);
                 resultRepository.save(result);
+                athleteRepository.save(athlete);
+                disciplineRepository.save(discipline);
             }
+        });
 
-            disciplineRepository.save(discipline);
-        }
-        disciplineRepository.deleteAll();
+        Optional<Athlete> lars = athleteRepository.findByName("Lars");
+        lars.ifPresent(athlete -> {
+            Discipline discipline = disciplineRepository.findByName("Long jump").orElse(null);
+            if (discipline != null) {
+                Result result = new Result(DISTANCE, LocalDate.now(), "1.23", athlete, discipline);
+                athlete.getResults().add(result);
+                athlete.getDisciplines().add(discipline);
+                discipline.getAthletes().add(athlete);
+                discipline.getResults().add(result);
+
+                resultRepository.save(result);
+                athleteRepository.save(athlete);
+                disciplineRepository.save(discipline);
+            }
+        });
+
+        Optional<Athlete> mette = athleteRepository.findByName("Mette");
+        mette.ifPresent(athlete -> {
+            Discipline discipline = disciplineRepository.findByName("Marathon").orElse(null);
+            if (discipline != null) {
+                Result result = new Result(TIME, LocalDate.now(), "12312", athlete, discipline);
+                athlete.getResults().add(result);
+                athlete.getDisciplines().add(discipline);
+                discipline.getAthletes().add(athlete);
+                discipline.getResults().add(result);
+
+                resultRepository.save(result);
+                athleteRepository.save(athlete);
+                disciplineRepository.save(discipline);
+            }
+        });
     }
 }
