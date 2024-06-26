@@ -3,7 +3,7 @@ package exam.athletebackend.athlete;
 import exam.athletebackend.athlete.dtos.AthleteRequestDTO;
 import exam.athletebackend.athlete.dtos.AthleteResponseDTO;
 import exam.athletebackend.discipline.DisciplineRepository;
-import exam.athletebackend.discipline.DisciplineService;
+import exam.athletebackend.result.ResultRepository;
 import exam.athletebackend.result.ResultService;
 import org.springframework.stereotype.Service;
 import exam.athletebackend.result.Result;
@@ -21,11 +21,13 @@ public class AthleteService {
     private final AthleteRepository athleteRepository;
     private final ResultService resultService;
     private final DisciplineRepository disciplineRepository;
+    private final ResultRepository resultRepository;
 
-    public AthleteService(AthleteRepository athleteRepository, ResultService resultService, DisciplineRepository disciplineRepository) {
+    public AthleteService(AthleteRepository athleteRepository, ResultService resultService, DisciplineRepository disciplineRepository, ResultRepository resultRepository) {
         this.athleteRepository = athleteRepository;
         this.resultService = resultService;
         this.disciplineRepository = disciplineRepository;
+        this.resultRepository = resultRepository;
     }
 
     public AthleteResponseDTO toDTO(Athlete athlete) {
@@ -114,10 +116,23 @@ public class AthleteService {
         Optional<Athlete> athleteToDelete = athleteRepository.findById(id);
         if (athleteToDelete.isPresent()) {
             Athlete athlete = athleteToDelete.get();
+
             List<Result> results = new ArrayList<>(athlete.getResults());
-            results.forEach(athlete::removeResult);
+            for (Result result : results) {
+                Discipline discipline = result.getDiscipline();
+                if (discipline != null) {
+                    discipline.removeResult(result);
+                    disciplineRepository.save(discipline);
+                }
+                resultRepository.delete(result);
+            }
+
             List<Discipline> disciplines = new ArrayList<>(athlete.getDisciplines());
-            disciplines.forEach(athlete::removeDiscipline);
+            for (Discipline discipline : disciplines) {
+                discipline.removeAthlete(athlete);
+                disciplineRepository.save(discipline);
+            }
+
             athleteRepository.deleteById(id);
         }
     }

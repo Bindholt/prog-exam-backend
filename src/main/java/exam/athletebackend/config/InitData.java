@@ -11,6 +11,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -61,10 +62,19 @@ public class InitData implements CommandLineRunner {
         athleteRepository.save(new Athlete("Julie", LocalDate.of(1998, 8, 31), "Kvinde", "Musserne"));
         athleteRepository.save(new Athlete("Mads", LocalDate.of(1992, 12, 12), "Mand", "Løberne"));
         athleteRepository.save(new Athlete("Lars", LocalDate.of(1988, 4, 2), "Mand", "Hold3"));
-        athleteRepository.save(new Athlete("Mette", LocalDate.of(1995, 6, 15), "Kvinde", "Hold4"));
+        athleteRepository.save(new Athlete("Mette", LocalDate.of(2011, 6, 15), "Kvinde", "Hold4"));
         athleteRepository.save(new Athlete("Sofie", LocalDate.of(1999, 2, 28), "Kvinde", "Hold4"));
-        athleteRepository.save(new Athlete("Mikkel", LocalDate.of(1990, 10, 10), "Mand", "Hold4"));
+        athleteRepository.save(new Athlete("Mikkel", LocalDate.of(1970, 10, 10), "Mand", "Hold4"));
+        athleteRepository.save(new Athlete("Morten", LocalDate.of(1973, 5, 5), "Mand", "Hold4"));
+        athleteRepository.save(new Athlete("Lene", LocalDate.of(1996, 9, 9), "Kvinde", "Hold5"));
+        athleteRepository.save(new Athlete("Lone", LocalDate.of(1997, 7, 7), "Kvinde", "Hold5"));
+        athleteRepository.save(new Athlete("Lasse", LocalDate.of(1981, 11, 11), "Mand", "Hold5"));
+        athleteRepository.save(new Athlete("Liva", LocalDate.of(1985, 3, 3), "Kvinde", "Hold5"));
+        athleteRepository.save(new Athlete("Luna", LocalDate.of(1986, 1, 1), "Kvinde", "Hold5"));
+        athleteRepository.save(new Athlete("Lulu", LocalDate.of(1987, 12, 12), "Kvinde", "Hold5"));
+        athleteRepository.save(new Athlete("Loui", LocalDate.of(1988, 4, 4), "Mand", "Hold6"));
     }
+
 
     private void createResults() {
         Optional<Athlete> julie = athleteRepository.findByName("Julie");
@@ -82,12 +92,26 @@ public class InitData implements CommandLineRunner {
                 disciplineRepository.save(discipline);
             }
         });
-
         Optional<Athlete> mads = athleteRepository.findByName("Mads");
         mads.ifPresent(athlete -> {
+            Discipline discipline = disciplineRepository.findByName("100-meter run").orElse(null);
+            if (discipline != null) {
+                Result result = new Result(TIME, LocalDate.now(), "2000", athlete, discipline);
+                athlete.getResults().add(result);
+                athlete.getDisciplines().add(discipline);
+                discipline.getAthletes().add(athlete);
+                discipline.getResults().add(result);
+
+                resultRepository.save(result);
+                athleteRepository.save(athlete);
+                disciplineRepository.save(discipline);
+            }
+        });
+        Optional<Athlete> lulu = athleteRepository.findByName("Lulu");
+        lulu.ifPresent(athlete -> {
             Discipline discipline = disciplineRepository.findByName("High jump").orElse(null);
             if (discipline != null) {
-                Result result = new Result(DISTANCE, LocalDate.now(), "1.23", athlete, discipline);
+                Result result = new Result(DISTANCE, LocalDate.now(), "200", athlete, discipline);
                 athlete.getResults().add(result);
                 athlete.getDisciplines().add(discipline);
                 discipline.getAthletes().add(athlete);
@@ -103,7 +127,7 @@ public class InitData implements CommandLineRunner {
         lars.ifPresent(athlete -> {
             Discipline discipline = disciplineRepository.findByName("Long jump").orElse(null);
             if (discipline != null) {
-                Result result = new Result(DISTANCE, LocalDate.now(), "1.23", athlete, discipline);
+                Result result = new Result(DISTANCE, LocalDate.now(), "123", athlete, discipline);
                 athlete.getResults().add(result);
                 athlete.getDisciplines().add(discipline);
                 discipline.getAthletes().add(athlete);
@@ -120,6 +144,51 @@ public class InitData implements CommandLineRunner {
             Discipline discipline = disciplineRepository.findByName("Marathon").orElse(null);
             if (discipline != null) {
                 Result result = new Result(TIME, LocalDate.now(), "12312", athlete, discipline);
+                athlete.getResults().add(result);
+                athlete.getDisciplines().add(discipline);
+                discipline.getAthletes().add(athlete);
+                discipline.getResults().add(result);
+
+                resultRepository.save(result);
+                athleteRepository.save(athlete);
+                disciplineRepository.save(discipline);
+            }
+        });
+        Optional<Athlete> sofie = athleteRepository.findByName("Sofie");
+        sofie.ifPresent(athlete -> {
+            Discipline discipline = disciplineRepository.findByName("Shot put").orElse(null);
+            if (discipline != null) {
+                Result result = new Result(DISTANCE, LocalDate.now(), "200", athlete, discipline);
+                athlete.getResults().add(result);
+                athlete.getDisciplines().add(discipline);
+                discipline.getAthletes().add(athlete);
+                discipline.getResults().add(result);
+
+                resultRepository.save(result);
+                athleteRepository.save(athlete);
+                disciplineRepository.save(discipline);
+            }
+        });
+        Optional<Athlete> mikkel = athleteRepository.findByName("Mikkel");
+        mikkel.ifPresent(athlete -> {
+            Discipline discipline = disciplineRepository.findByName("100-meter hurdles").orElse(null);
+            if (discipline != null) {
+                Result result = new Result(TIME, LocalDate.now(), "12312", athlete, discipline);
+                athlete.getResults().add(result);
+                athlete.getDisciplines().add(discipline);
+                discipline.getAthletes().add(athlete);
+                discipline.getResults().add(result);
+
+                resultRepository.save(result);
+                athleteRepository.save(athlete);
+                disciplineRepository.save(discipline);
+            }
+        });
+        Optional<Athlete> morten = athleteRepository.findByName("Morten");
+        morten.ifPresent(athlete -> {
+            Discipline discipline = disciplineRepository.findByName("Pole vault").orElse(null);
+            if (discipline != null) {
+                Result result = new Result(DISTANCE, LocalDate.now(), "105", athlete, discipline);
                 athlete.getResults().add(result);
                 athlete.getDisciplines().add(discipline);
                 discipline.getAthletes().add(athlete);

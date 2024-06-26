@@ -24,7 +24,7 @@ public class Athlete {
     private LocalDate birthdate;
     private String gender;
     private String club;
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Result> results = new ArrayList<>();
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
