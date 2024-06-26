@@ -1,5 +1,6 @@
 package exam.athletebackend.discipline;
 
+import exam.athletebackend.discipline.dtos.DisciplineRequestDTO;
 import exam.athletebackend.discipline.dtos.DisciplineResponseDTO;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +21,8 @@ public class DisciplineController {
     }
 
     @PostMapping
-    public DisciplineResponseDTO addDiscipline(@RequestBody DisciplineResponseDTO disciplineResponseDTO) {
-        return disciplineService.addDiscipline(disciplineResponseDTO);
+    public DisciplineResponseDTO addDiscipline(@RequestBody DisciplineRequestDTO dto) {
+        return disciplineService.addDiscipline(dto);
     }
 
     @DeleteMapping("/{id}")

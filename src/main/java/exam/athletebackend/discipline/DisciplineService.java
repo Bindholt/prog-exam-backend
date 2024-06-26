@@ -2,6 +2,7 @@ package exam.athletebackend.discipline;
 
 import exam.athletebackend.athlete.Athlete;
 import exam.athletebackend.discipline.dtos.AthleteDisciplineDTO;
+import exam.athletebackend.discipline.dtos.DisciplineRequestDTO;
 import exam.athletebackend.discipline.dtos.DisciplineResponseDTO;
 import exam.athletebackend.result.ResultService;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,13 @@ public class DisciplineService {
         );
     }
 
+    public Discipline fromDTO(DisciplineRequestDTO dto) {
+        Discipline discipline = new Discipline();
+        discipline.setName(dto.name());
+        discipline.setResultType(dto.resultType());
+        return discipline;
+    }
+
     public DisciplineResponseDTO toDTO(Discipline discipline) {
         return new DisciplineResponseDTO(
                 discipline.getId(),
@@ -44,10 +52,8 @@ public class DisciplineService {
                 .toList();
     }
 
-    public DisciplineResponseDTO addDiscipline(DisciplineResponseDTO disciplineResponseDTO) {
-        Discipline discipline = new Discipline();
-        discipline.setName(disciplineResponseDTO.name());
-        discipline.setResultType(disciplineResponseDTO.resultType());
+    public DisciplineResponseDTO addDiscipline(DisciplineRequestDTO dto) {
+        Discipline discipline = fromDTO(dto);
         disciplineRepository.save(discipline);
         return toDTO(discipline);
     }

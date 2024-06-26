@@ -1,6 +1,7 @@
 package exam.athletebackend.athlete;
 
-import org.springframework.http.HttpStatus;
+import exam.athletebackend.athlete.dtos.AthleteRequestDTO;
+import exam.athletebackend.athlete.dtos.AthleteResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,27 +17,27 @@ public class AthleteController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AthleteDTO>> getAthletes() {
+    public ResponseEntity<List<AthleteResponseDTO>> getAthletes() {
         return ResponseEntity.ok(athleteService.getAthletes());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AthleteDTO> getAthlete(@PathVariable Long id) {
+    public ResponseEntity<AthleteResponseDTO> getAthlete(@PathVariable Long id) {
         return ResponseEntity.of(athleteService.getAthlete(id));
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<List<AthleteDTO>> getAthleteByName(@PathVariable String name) {
+    public ResponseEntity<List<AthleteResponseDTO>> getAthleteByName(@PathVariable String name) {
         return ResponseEntity.ok(athleteService.getAthleteByName(name));
     }
 
     @PostMapping
-    public ResponseEntity<AthleteDTO> addAthlete(@RequestBody AthleteDTO athleteDTO) {
-        return ResponseEntity.ok(athleteService.addAthlete(athleteDTO));
+    public ResponseEntity<AthleteResponseDTO> addAthlete(@RequestBody AthleteRequestDTO dto) {
+        return ResponseEntity.ok(athleteService.addAthlete(dto));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<AthleteDTO> updatePartialAthlete(@PathVariable Long id, @RequestBody AthleteDTO dto) {
+    public ResponseEntity<AthleteResponseDTO> updatePartialAthlete(@PathVariable Long id, @RequestBody AthleteRequestDTO dto) {
         return ResponseEntity.of(athleteService.updatePartialAthlete(id, dto));
     }
 

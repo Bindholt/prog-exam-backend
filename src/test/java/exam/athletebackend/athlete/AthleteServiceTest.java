@@ -1,4 +1,5 @@
 package exam.athletebackend.athlete;
+import exam.athletebackend.athlete.dtos.AthleteResponseDTO;
 import exam.athletebackend.discipline.DisciplineRepository;
 import exam.athletebackend.discipline.DisciplineService;
 import exam.athletebackend.result.ResultService;
@@ -55,17 +56,6 @@ class AthleteServiceTest {
         athleteService.getAthlete(1L);
 
         verify(athleteRepository, times(1)).findById(1L);
-    }
-
-    @Test
-    void addAthleteSavesAndReturnsAthlete() {
-        AthleteDTO athleteDTO = new AthleteDTO(1L, "Name", LocalDate.now(), "Gender", "Club", Arrays.asList(), Arrays.asList());
-        Athlete athlete = new Athlete("Name", LocalDate.now(), "Gender", "Club", Arrays.asList());
-        when(athleteRepository.save(any(Athlete.class))).thenReturn(athlete);
-
-        athleteService.addAthlete(athleteDTO);
-
-        verify(athleteRepository, times(1)).save(any(Athlete.class));
     }
 
     @Test

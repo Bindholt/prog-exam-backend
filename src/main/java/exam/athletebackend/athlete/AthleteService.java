@@ -1,5 +1,7 @@
 package exam.athletebackend.athlete;
 
+import exam.athletebackend.athlete.dtos.AthleteRequestDTO;
+import exam.athletebackend.athlete.dtos.AthleteResponseDTO;
 import exam.athletebackend.discipline.DisciplineRepository;
 import exam.athletebackend.discipline.DisciplineService;
 import exam.athletebackend.result.ResultService;
@@ -18,18 +20,16 @@ import java.util.stream.Collectors;
 public class AthleteService {
     private final AthleteRepository athleteRepository;
     private final ResultService resultService;
-    private final DisciplineService disciplineService;
     private final DisciplineRepository disciplineRepository;
 
-    public AthleteService(AthleteRepository athleteRepository, ResultService resultService, DisciplineService disciplineService, DisciplineRepository disciplineRepository) {
+    public AthleteService(AthleteRepository athleteRepository, ResultService resultService, DisciplineRepository disciplineRepository) {
         this.athleteRepository = athleteRepository;
         this.resultService = resultService;
-        this.disciplineService = disciplineService;
         this.disciplineRepository = disciplineRepository;
     }
 
-    public AthleteDTO toDTO(Athlete athlete) {
-        return new AthleteDTO(
+    public AthleteResponseDTO toDTO(Athlete athlete) {
+        return new AthleteResponseDTO(
                 athlete.getId(),
                 athlete.getName(),
                 athlete.getBirthdate(),
@@ -40,13 +40,13 @@ public class AthleteService {
         );
     }
 
-    public Athlete fromDTO(AthleteDTO athleteDTO) {
+    public Athlete fromDTO(AthleteRequestDTO athleteResponseDTO) {
         return new Athlete(
-                athleteDTO.name(),
-                athleteDTO.birthdate(),
-                athleteDTO.gender(),
-                athleteDTO.club(),
-                athleteDTO.disciplines().stream()
+                athleteResponseDTO.name(),
+                athleteResponseDTO.birthdate(),
+                athleteResponseDTO.gender(),
+                athleteResponseDTO.club(),
+                athleteResponseDTO.disciplines().stream()
                         .map(disciplineRepository::findByName)
                         .filter(Optional::isPresent)
                         .map(Optional::get)
@@ -54,23 +54,23 @@ public class AthleteService {
         );
     }
 
-    public List<AthleteDTO> getAthletes() {
+    public List<AthleteResponseDTO> getAthletes() {
         return athleteRepository.findAll()
                 .stream()
                 .map(this::toDTO)
                 .toList();
     }
 
-    public Optional<AthleteDTO> getAthlete(Long id) {
+    public Optional<AthleteResponseDTO> getAthlete(Long id) {
         return athleteRepository.findById(id)
                 .map(this::toDTO);
     }
 
-    public AthleteDTO addAthlete(AthleteDTO athleteDTO) {
-        return toDTO(athleteRepository.save(fromDTO(athleteDTO)));
+    public AthleteResponseDTO addAthlete(AthleteRequestDTO dto) {
+        return toDTO(athleteRepository.save(fromDTO(dto)));
     }
 
-    public Optional<AthleteDTO> updatePartialAthlete(Long id, AthleteDTO dto) {
+    public Optional<AthleteResponseDTO> updatePartialAthlete(Long id, AthleteRequestDTO dto) {
         Map<String, Object> fields = dtoToMap(dto);
         Optional<Athlete> athleteToUpdate = athleteRepository.findById(id);
         athleteToUpdate.ifPresent(
@@ -98,7 +98,7 @@ public class AthleteService {
         return athleteToUpdate.map(athleteRepository::save).map(this::toDTO);
     }
 
-    private Map<String, Object> dtoToMap(AthleteDTO dto) {
+    private Map<String, Object> dtoToMap(AthleteRequestDTO dto) {
         Map<String, Object> map = new HashMap<>();
         if (dto.name() != null) map.put("name", dto.name());
         if (dto.birthdate() != null) map.put("birthdate", dto.birthdate());
@@ -122,7 +122,7 @@ public class AthleteService {
         }
     }
 
-    public List<AthleteDTO> getAthleteByName(String name) {
+    public List<AthleteResponseDTO> getAthleteByName(String name) {
         Optional<List<Athlete>> athletesOpt = athleteRepository.findAllByNameContains(name);
         return athletesOpt.map(athletes -> athletes.stream()
                 .map(this::toDTO)

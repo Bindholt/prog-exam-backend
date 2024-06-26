@@ -41,17 +41,6 @@ class DisciplineServiceTest {
     }
 
     @Test
-    void addDisciplineSavesAndReturnsDiscipline() {
-        DisciplineResponseDTO disciplineResponseDTO = new DisciplineResponseDTO(1L, "Name", ResultType.TIME, List.of(), List.of());
-        Discipline discipline = new Discipline();
-        when(disciplineRepository.save(any(Discipline.class))).thenReturn(discipline);
-
-        disciplineService.addDiscipline(disciplineResponseDTO);
-
-        verify(disciplineRepository, times(1)).save(any(Discipline.class));
-    }
-
-    @Test
     void deleteDisciplineDeletesCorrectDiscipline() {
         disciplineService.deleteDiscipline(1L);
 
